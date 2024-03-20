@@ -46,8 +46,8 @@ type Query {
 
 type Mutation {
     createMemoTest(name: String!): MemoTest! @create
-    addImageToMemoTest(memo_test_id: ID!, imagePath: String!): MemoTestImage! @update
-    removeImageFromMemoTest(memo_test_id: ID!, imageId: ID!): MemoTest! @update
+    addImageToMemoTest(memo_test_id: ID!, image_path: String!): MemoTestImage! @create
+    removeImageFromMemoTest(id: ID! @eq): MemoTestImage! @delete
     deleteMemoTest(id: ID! @eq): MemoTest! @delete
 
     createGameSession(memo_test_id: ID!, user_session_code: String!): GameSession! @create
