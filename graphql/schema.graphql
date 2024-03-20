@@ -1,0 +1,53 @@
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+
+type MemoTest {
+    id: ID!
+    name: String!
+    images: [MemoTestImage!]! @hasMany
+    high_score: Float
+}
+
+type MemoTestImage {
+    id: ID!
+    memoTest: MemoTest! @belongsTo
+    image_path: String!
+}
+
+type GameSession {
+    id: ID!
+    memoTest: MemoTest! @belongsTo
+    user_session_code: String
+    retries: Int!
+    number_of_pairs: Int
+    state: SessionState
+    score: Float
+    board_state: String
+}
+
+enum SessionState {
+    Started
+    Completed
+}
+
+type Query {
+    memoTests(
+        name: String @where(operator: "like")
+    ): [MemoTest!]! @paginate
+    memoTest(id: ID! @eq): MemoTest @find
+    gameSession(id: ID! @eq): GameSession @find
+
+    memoTestImages
+    : [MemoTestImage!]! @paginate
+}
+
+type Mutation {
+    createMemoTest(name: String!): MemoTest! @create
+    addImageToMemoTest(memo_test_id: ID!, imagePath: String!): MemoTestImage! @update
+    removeImageFromMemoTest(memo_test_id: ID!, imageId: ID!): MemoTest! @update
+    deleteMemoTest(id: ID! @eq): MemoTest! @delete
+
+    createGameSession(memo_test_id: ID!, user_session_code: String!): GameSession! @create
+    updateGameSession(id: ID!, retries:Int, number_of_pairs:Int, state: SessionState , @eq, board_state: String): GameSession! @update
+    endGameSession(id: ID!): GameSession! @update
+}
