@@ -36,7 +36,10 @@ type Query {
     ): [MemoTest!]! @paginate
     memoTest(id: ID! @eq): MemoTest @find
     gameSession(id: ID! @eq): GameSession @find
-
+    gameSessions(
+        user_session_code: String @where(operator: "like"),
+        state: SessionState
+    ): [GameSession]! @paginate
     memoTestImages
     : [MemoTestImage!]! @paginate
 }
